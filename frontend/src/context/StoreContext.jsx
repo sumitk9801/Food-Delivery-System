@@ -2,11 +2,14 @@ import React, { createContext, useState}  from 'react';
 import { food_list } from '../assets/assets';
 
 
+
 export const StoreContext = createContext(null);
 
 const StoreContestProvider = (props)=>{
 
   const [cartItems , setCartItems]=useState({});
+  const url = "http://localhost:3000";
+  const [token,setToken]=useState("")
 
   const addToCart = (ItemId) => {
     if(!cartItems[ItemId]) {
@@ -46,7 +49,9 @@ const StoreContestProvider = (props)=>{
         setCartItems,
         addToCart,
         removeFromCart,
-        getTotalCartAmount
+        getTotalCartAmount,
+        url,
+        setToken
     }    
       return(
         

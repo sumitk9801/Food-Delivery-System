@@ -45,35 +45,41 @@ const Cart = () => {
           )}
         </div>
         <div className="cart-bottom">
-          <div className="cart-total">
-            <h2>Cart Totals</h2>
-            <div>
-              <div className="cart-total-details">
-                <p>Subtotal</p>
-                <p>${getTotalCartAmount()}</p>
+          {Object.values(cartItems).some(quantity => quantity > 0) ? (
+            <>
+              <div className="cart-total">
+                <h2>Cart Totals</h2>
+                <div>
+                  <div className="cart-total-details">
+                    <p>Subtotal</p>
+                    <p>${getTotalCartAmount()}</p>
+                  </div>
+                  <hr />
+                  <div className="cart-total-details">
+                    <p>Delivery Fee</p>
+                    <p>${2}</p>
+                  </div>
+                  <hr />
+                  <div className="cart-total-details">
+                    <b>Total</b>
+                    <b>${getTotalCartAmount()+2}</b>
+                  </div>
+                </div>
+                  <button onClick={()=>navigate('/order')}>Proceed to Checkout</button>
               </div>
-              <hr />
-              <div className="cart-total-details">
-                <p>Delivery Fee</p>
-                <p>${2}</p>
+              <div className="cart-promocode">
+                <div className="">
+                  <p>if you have promocode, Enter it here</p>
+                  <div class="cart-promocode-input">
+                    <input type="text" placeholder="promo code" />
+                    <button>Submit</button>
+                  </div>
+                </div>
               </div>
-              <hr />
-              <div className="cart-total-details">
-                <b>Total</b>
-                <b>${getTotalCartAmount()+2}</b>
-              </div>
-            </div>
-              <button onClick={()=>navigate('/order')}>Proceed to Checkout</button>
-          </div>
-        <div className="cart-promocode">
-          <div className="">
-            <p>if you have promocode, Enter it here</p>
-            <div class="cart-promocode-input">
-              <input type="text" placeholder="promo code" />
-              <button>Submit</button>
-            </div>
-          </div>
-        </div>
+            </>
+          ) : (
+            <p className='cart-empty'>"No item is Added to Cart"</p>
+          )}
         </div>
       </div>
     </div>

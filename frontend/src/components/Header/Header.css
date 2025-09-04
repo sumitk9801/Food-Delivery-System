@@ -4,6 +4,7 @@
     background:url('/header_img.png') no-repeat ;
     background-size: contain;
     position: relative;
+
 }
 .header-content{
     position: absolute;
@@ -14,7 +15,7 @@
     max-width:50%;
     bottom:10%;
     left:6vw;
-    animation:fadeIn 1s ease-in-out;
+    animation:forwards 1s ease-in-out;
 }
 .header-content h2{
     font-size:max(4.5vw,22px);
@@ -34,6 +35,10 @@
     font-size:max(1vw, 13px);
     border-radius: 50px;
 
+}
+
+.button{
+    cursor: pointer;
 }
 @media (max-width: 1050px) {
 

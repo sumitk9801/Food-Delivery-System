@@ -31,7 +31,7 @@ const LoginPop = ({ setShowLogin }) => {
       newUrl +="/api/user/login";
     }
     else{
-      newurl +="/api/user/register";
+      newUrl +="/api/user/register";
     }
 
     const response = await axios.post(newUrl,data);

@@ -7,16 +7,20 @@ import FoodItem from '../FoodItem/FoodItem.jsx';
 
 
 const FoodDisplay = ({category}) => {
-    const {food_list} = useContext(StoreContext);
+    const {filteredFoodList, searchTerm} = useContext(StoreContext);
   return (
     <div className='food-display' id='food-display'>
-        <h2>Top Dishes near you</h2>      
+        <h2>Top Dishes near you</h2>
         <div className="food-display-list">
-            {food_list.map((item,index)=>{
-              if(category==="All" || category === item.category){
-                return <FoodItem key={index} id={item._id} name={item.name} description={item.description} price={item.price} image={item.image}/>
-              }
-            })}
+            {filteredFoodList.length > 0 ? (
+                filteredFoodList.map((item,index)=>{
+                  if(category==="All" || category === item.category){
+                    return <FoodItem key={index} id={item._id} name={item.name} description={item.description} price={item.price} image={item.image}/>
+                  }
+                })
+            ) : searchTerm ? (
+                <p style={{textAlign: 'center', fontSize: '30px', marginTop: '50px'}}>Not Found Item</p>
+            ) : null}
         </div>
     </div>
   )

@@ -47,10 +47,20 @@ const removeFromCart = async (req, res) => {
       return res.status(404).json({ success: false, message: "Cart not found" });
     }
 
-    cart.items = cart.items.filter(item => item.foodId.toString() !== foodId);
+    const existingItem = cart.items.find(item => item.foodId.toString() === foodId);
+
+    if (existingItem) {
+      if (existingItem.quantity > 1) {
+        existingItem.quantity -= 1;
+      } else {
+        cart.items = cart.items.filter(item => item.foodId.toString() !== foodId);
+      }
+    } else {
+      return res.status(404).json({ success: false, message: "Item not in cart" });
+    }
 
     await cart.save();
-    res.json({ success: true, message: "Item removed from cart" });
+    res.json({ success: true, message: "Item quantity reduced from cart" });
   } catch (error) {
     console.log(error);
     res.status(500).json({ success: false, message: "Error removing from cart" });

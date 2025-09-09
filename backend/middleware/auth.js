@@ -1,17 +1,21 @@
 import jwt from 'jsonwebtoken';
 
-const auth = (req, res, next) => {
-  try {
-    const token = req.headers.authorization?.split(" ")[1];
-    if (!token) {
-      return res.status(401).json({ message: "Authentication failed: No token provided" });
-    }
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = decoded;
+const auth = async(req, res, next) => {
+
+  const token = req.headers.authorization?.split(" ")[1];
+
+  if(!token){
+    return res.status(401).json({success:false,message: "Authentication failed: No token provided" });
+  }
+
+  try{
+    const token_decode=jwt.verify(token,process.env.JWT_SECRET);
+    req.user=token_decode;
     next();
-  } catch (error) {
-    return res.status(401).json({ message: "Authentication failed: Invalid token" });
+  } catch(error){
+    return res.status(401).json({success:false,message:"Authentication failed: Invalid token"});
   }
 };
+
 
 export default auth;

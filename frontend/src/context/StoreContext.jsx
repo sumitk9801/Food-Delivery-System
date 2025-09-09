@@ -17,9 +17,6 @@ const StoreContestProvider = (props)=>{
     if (storedToken) {
       setToken(storedToken);
     }
-  }, []);
-
-  useEffect(() => {
     const storedCart = localStorage.getItem("cartItems");
     if (storedCart) {
       setCartItems(JSON.parse(storedCart));

@@ -1,10 +1,11 @@
 import React, { useContext, useState } from 'react'
 import "./placeOrder.css"
+import axios from 'axios';
 import { StoreContext } from '../../context/StoreContext'
 
 const PlaceOrder = () => {
 
-  const { getTotalCartAmount, userToken } = useContext(StoreContext);
+  const { getTotalCartAmount, token,food_list,cartItems,url } = useContext(StoreContext);
   const [deliveryInfo, setDeliveryInfo] = useState({
     firstName: '',
     lastName: '',
@@ -24,26 +25,31 @@ const PlaceOrder = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      const response = await fetch('http://localhost:3000/api/order/place', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${userToken}`
-        },
-        body: JSON.stringify({ deliveryInfo })
-      });
-      const data = await response.json();
-      if (data.success) {
-        setMessage('Order placed successfully!');
-      } else {
-        setMessage('Failed to place order.');
+    let orderItems = [];
+    food_list.map((item)=>{
+      if( cartItems[item._id]>0){
+        let itemInfo=item;
+        itemInfo["quantity"]=cartItems[item._id];
+        orderItems.push(itemInfo);
       }
-    } catch (err) {
-      console.log(err);
-      setMessage('Error placing order.');
+    
+    })
+    let orderData={
+      deliveryInfo:deliveryInfo,
+      items:orderItems,
+      amount:getTotalCartAmount()+2
+    }
+    let response = await axios.post(url+"/api/order/place", orderData,{headers:{Authorization: `Bearer ${token}`}});
+    if(response.data.success){
+      const {url}=response.data;
+      window.location.replace(url);
+      setMessage("Order placed successfully!");
+
+    } else {
+      alert("Failed to place order. Please try again.");
     }
   };
+ 
 
   return (
     <div>

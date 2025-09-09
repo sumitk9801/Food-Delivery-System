@@ -2,7 +2,7 @@ import Order from "../models/orderModel.js";
 import Cart from "../models/cartModel.js";
 import Stripe from 'stripe';
 
-const stripe= new Stripe(process.env.STRIPE_SECRET_KEY);
+// const stripe= new Stripe(process.env.STRIPE_SECRET_KEY);
 
 const placeOrder = async (req, res) => {
   try {

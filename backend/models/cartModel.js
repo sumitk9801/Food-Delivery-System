@@ -1,8 +1,8 @@
-import mongoose from "mongoose";
+ import mongoose from "mongoose";
 
 const cartItemSchema = new mongoose.Schema({
   foodId: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: Number,
     ref: "Food",
     required: true,
   },

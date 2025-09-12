@@ -1,41 +1,25 @@
-# TODO: Test All Backend Routes
+# TODO: Investigate Database Connectivity for Order Placement
 
-## Step 1: Start Backend Server ✅
-- Navigate to backend directory
-- Install dependencies if needed: `npm install`
-- Start the server: `npm run dev` (runs on http://localhost:3000)
+## Completed Steps
+- [x] Read backend/config/db.js to check database connection
+- [x] Read backend/controllers/orderController.js to understand order placement logic
+- [x] Read backend/models/orderModel.js to verify order schema
+- [x] Read frontend/src/PAGES/PlaceOrder/placeOrder.jsx to check frontend order submission
+- [x] Read backend/server.js to confirm DB connection and route setup
+- [x] Read backend/routes/orderRoute.js to verify order route
+- [x] Read backend/controllers/cartController.js to understand cart management
+- [x] Read frontend/src/context/StoreContext.jsx to check cart state management
+- [x] Read backend/middleware/auth.js to verify authentication
+- [x] Added detailed logging around order.save() in orderController.js to catch save errors
+- [x] Updated StoreContext.jsx to call backend cart API for addToCart and removeFromCart
+- [x] Added loadCart function to sync cart from database on login
+- [x] Fixed ObjectId casting errors by changing foodId to string in models
+- [x] Updated cartController to use findOne instead of findById for food check
+- [x] Removed food existence check in cartController as foods are static
+- [x] Updated orderController to handle string foodId
 
-## Step 2: Test Public Routes (No Auth Required) ✅
-- GET / : Basic health check ✅
-- GET /api/food/list : List all food items ✅
-- POST /api/user/register : Register a new user ✅
-- POST /api/user/login : Login user and get JWT token ✅
-
-## Step 3: Test Protected Routes (Auth Required) ✅
-- POST /api/food/add : Add new food item (requires image upload) - Skipped (needs file upload)
-- POST /api/food/remove : Remove food item ✅
-- POST /api/food/removeALL : Remove all food items ✅
-- POST /api/cart/add : Add item to cart ✅
-- POST /api/cart/remove : Remove item from cart ✅
-- GET /api/cart/get : Get user's cart ✅
-
-## Step 4: Verify Responses ✅
-- Check status codes (200 for success, appropriate errors) ✅
-- Validate JSON response structure ✅
-- Ensure authentication works for protected routes ✅
-- Test error handling for invalid requests - Not tested
-
-## Step 5: Report Results ✅
-- All tested routes are working perfectly
-- JSON responses are correctly formatted (terminal display may omit commas but actual JSON is valid)
-- Authentication middleware is functioning correctly
-- No failing routes found
-- ✅ Security Issue Resolved: Added authentication to admin routes /api/food/remove and /api/food/removeALL for security
-
-## Additional: Order Model Implementation ✅
-- Created backend/models/orderModel.js with order schema
-- Created backend/controllers/orderController.js with placeOrder function
-- Created backend/routes/orderRoute.js with POST /api/order/place route
-- Updated backend/server.js to register order routes
-- Updated frontend/src/PAGES/PlaceOrder/placeOrder.jsx to submit order to backend
-- Order model handles order creation, cart clearing, and delivery info storage
+## Pending Steps
+- [ ] Test adding items to cart and verify they are saved in the database
+- [ ] Test placing an order and verify it is saved in the database
+- [ ] Monitor backend logs for any errors during cart operations
+- [ ] Optionally, clear cart after successful order placement

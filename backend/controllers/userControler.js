@@ -30,10 +30,10 @@ const loginUser = async(req,res)=>{
 }
 const createToken = (id)=>{
     return jwt.sign({id},process.env.JWT_SECRET);
+//   return jwt.sign({ id: user._id, email: user.email }, process.env.JWT_SECRET);
 }
-
 //register user
-const registerUser = async(req,res)=>{
+  const registerUser = async(req,res)=>{
     // Handle case-insensitive field names
     const name = req.body.name || req.body.Name;
     const password = req.body.password || req.body.Password;
@@ -81,6 +81,5 @@ const registerUser = async(req,res)=>{
         console.log(error);
         res.json({success:false, message:"This is Error"});
     }
-}
-
+};
 export {loginUser,registerUser}

@@ -7,11 +7,7 @@ const addToCart = async (req, res) => {
     const { foodId, quantity } = req.body;
     const userId = req.user.id;
 
-    // Check if food exists
-    const food = await Food.findById(foodId);
-    if (!food) {
-      return res.status(404).json({ success: false, message: "Food not found" });
-    }
+    // Note: Food existence check removed as foods are static in frontend
 
     let cart = await Cart.findOne({ userId });
 

@@ -1,5 +1,6 @@
 import React, { createContext, useState, useEffect, useMemo}  from 'react';
 import { food_list } from '../assets/assets';
+import axios from 'axios';
 
 
 
@@ -12,38 +13,104 @@ const StoreContestProvider = (props)=>{
   const [token,setToken]=useState("")
   const [searchTerm, setSearchTerm] = useState("");
 
+  const loadCart = async () => {
+    if (!token) return;
+    try {
+      const response = await axios.get(`${url}/api/cart/get`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json"
+        }
+      });
+      if (response.data.success) {
+        const cartData = {};
+        if (response.data.cart && response.data.cart.items) {
+          response.data.cart.items.forEach(item => {
+            if (item.foodId) {
+              cartData[item.foodId.toString()] = item.quantity;
+            }
+          });
+        }
+        setCartItems(cartData);
+      }
+    } catch (error) {
+      console.error("Error loading cart:", error);
+    }
+  };
+
   useEffect(() => {
     const storedToken = localStorage.getItem("token");
     if (storedToken) {
       setToken(storedToken);
     }
-    const storedCart = localStorage.getItem("cartItems");
-    if (storedCart) {
-      setCartItems(JSON.parse(storedCart));
-    }
   }, []);
+
+  useEffect(() => {
+    if (token) {
+      loadCart();
+    }
+  }, [token]);
 
   useEffect(() => {
     localStorage.setItem("cartItems", JSON.stringify(cartItems));
   }, [cartItems]);
 
-  const addToCart = (ItemId) => {
-    if(!cartItems[ItemId]) {
-        setCartItems(prevItems => ({
-            ...prevItems,
-            [ItemId]: 1
-        }));
-    }
-    else{
-      setCartItems((prev)=>({...prev,[ItemId]:prev[ItemId]+1}));
-    }
-  }
-  const removeFromCart = (ItemId)=>{
-    if(!cartItems[ItemId]){
+  const addToCart = async (ItemId) => {
+    if (!token) {
+      alert("Please login to add items to cart");
       return;
     }
-    else{
-      setCartItems((prev)=>({...prev,[ItemId]:prev[ItemId]-1}));
+    try {
+      const response = await axios.post(`${url}/api/cart/add`, { foodId: ItemId, quantity: 1 }, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json"
+        }
+      });
+      if (response.data.success) {
+        if(!cartItems[ItemId]) {
+          setCartItems(prevItems => ({
+              ...prevItems,
+              [ItemId]: 1
+          }));
+        }
+        else{
+          setCartItems((prev)=>({...prev,[ItemId]:prev[ItemId]+1}));
+        }
+      } else {
+        alert("Failed to add item to cart");
+      }
+    } catch (error) {
+      console.error("Error adding to cart:", error);
+      alert("Error adding to cart");
+    }
+  }
+
+  const removeFromCart = async (ItemId)=>{
+    if (!token) {
+      alert("Please login to remove items from cart");
+      return;
+    }
+    try {
+      const response = await axios.post(`${url}/api/cart/remove`, { foodId: ItemId }, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json"
+        }
+      });
+      if (response.data.success) {
+        if(!cartItems[ItemId]){
+          return;
+        }
+        else{
+          setCartItems((prev)=>({...prev,[ItemId]:prev[ItemId]-1}));
+        }
+      } else {
+        alert("Failed to remove item from cart");
+      }
+    } catch (error) {
+      console.error("Error removing from cart:", error);
+      alert("Error removing from cart");
     }
   }
 

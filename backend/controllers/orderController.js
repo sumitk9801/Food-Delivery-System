@@ -1,5 +1,6 @@
 import dotenv from 'dotenv';
 dotenv.config();
+import mongoose from 'mongoose';
 import orderModel from "../models/orderModel.js";
 import Cart from "../models/cartModel.js";
 import Stripe from 'stripe';
@@ -7,75 +8,87 @@ import Stripe from 'stripe';
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 const placeOrder = async (req, res) => {
+  console.log("Backend received:", req.body);
+  console.log("User from token:", req.user);
+
   try {
     const userId = req.user.id;
-    const { deliveryInfo } = req.body;
+    const { deliveryInfo, items, amount } = req.body;
 
-    // Get user's cart
-    const cart = await Cart.findOne({ userId }).populate('items.foodId');
-    if (!cart || cart.items.length === 0) {
-      return res.status(400).json({ success: false, message: "Cart is empty" });
+    console.log("Delivery Info:", deliveryInfo);
+    console.log("Items:", items);
+    console.log("Amount:", amount);
+
+    if (!deliveryInfo || !items || items.length === 0 || !amount) {
+      return res.status(400).json({ success: false, message: "Invalid order data" });
     }
 
-    // Calculate total amount
-    let totalAmount = 0;
-    cart.items.forEach(item => {
-      totalAmount += item.foodId.price * item.quantity;
-    });
-    totalAmount += 2; // delivery fee
+    // Validate foodId values before conversion
+    for (const item of items) {
+      console.log("Validating item:", item);
+      if (!item.foodId) {
+        return res.status(400).json({ success: false, message: `Missing foodId in item` });
+      }
+    }
 
-    // Create order
     const order = new orderModel({
-      userId,
-      items: cart.items.map(item => ({
-        foodId: item.foodId._id,
+      userId: new mongoose.Types.ObjectId(userId),
+      items: items.map(item => ({
+        foodId: item.foodId,
         quantity: item.quantity
       })),
       deliveryInfo,
-      totalAmount
+      totalAmount: amount
     });
 
-    await order.save();
+    try {
+      await order.save();
+      console.log("Order saved successfully:", order);
+    } catch (saveError) {
+      console.error("Error saving order:", saveError);
+      return res.status(500).json({ success: false, message: "Failed to save order" });
+    }
 
-    // Clear cart after order
-    await Cart.findOneAndUpdate({ userId }, { items: [] });
     const session = await stripe.checkout.sessions.create({
-      payment_method_types: ['card'],
+      payment_method_types: ["card"],
       line_items: [
-        ...cart.items.map(item => ({
+        ...items.map(item => ({
           price_data: {
-            currency: 'usd',
+            currency: "usd",
             product_data: {
-              name: item.foodId.name,
-              description: item.foodId.description,
+              name: item.name,
+              description: item.description || "",
             },
-            unit_amount: Math.round(item.foodId.price * 100), // amount in cents
+            unit_amount: Math.round(item.price * 100), 
           },
+
           quantity: item.quantity,
         })),
         {
           price_data: {
-            currency: 'usd',
+            currency: "usd",
             product_data: {
-              name: 'Delivery Fee',
-              description: 'Delivery Charge',
+              name: "Delivery Fee",
+              description: "Delivery Charge",
             },
-            unit_amount: 200, // $2 delivery fee in cents
+            unit_amount: 200, 
           },
           quantity: 1,
         }
       ],
-      mode: 'payment',
+      mode: "payment",
       success_url: `${process.env.CLIENT_URL}/verify?success=true&orderId=${order._id}`,
-      cancel_url: `${process.env.CLIENT_URL}/verify?success=false&orderId=${order._id}`, 
+      cancel_url: `${process.env.CLIENT_URL}/verify?success=false&orderId=${order._id}`,
     });
-    res.json({ success: true, url: session.url, orderId: order._id });
 
+ 
+    res.json({ success: true, session_url: session.url, orderId: order._id });
 
   } catch (error) {
-    console.log(error);
-    res.json({ success: false, message: "Error placing order" });
+    console.error("Order Error:", error);
+    res.status(500).json({ success: false, message: "Error placing order" });
   }
 };
+
 
 export { placeOrder };

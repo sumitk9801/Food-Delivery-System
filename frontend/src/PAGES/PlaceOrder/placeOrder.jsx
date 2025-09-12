@@ -5,7 +5,7 @@ import { StoreContext } from '../../context/StoreContext'
 
 const PlaceOrder = () => {
 
-  const { getTotalCartAmount, token,food_list,cartItems,url } = useContext(StoreContext);
+  const { getTotalCartAmount, token, url, food_list, cartItems} = useContext(StoreContext);
   const [deliveryInfo, setDeliveryInfo] = useState({
     firstName: '',
     lastName: '',
@@ -17,37 +17,63 @@ const PlaceOrder = () => {
     country: '',
     phone: ''
   });
-  const [message, setMessage] = useState('');
 
   const handleChange = (e) => {
     setDeliveryInfo({ ...deliveryInfo, [e.target.name]: e.target.value });
+    console.log(`${token}`);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!token) {
+      alert("Please sign in to place an order.");
+      return;
+    }
+
     let orderItems = [];
-    food_list.map((item)=>{
-      if( cartItems[item._id]>0){
-        let itemInfo=item;
-        itemInfo["quantity"]=cartItems[item._id];
+    food_list.forEach((item) => {
+      if (cartItems[item._id] > 0) {
+        let itemInfo = {
+          foodId: item._id,
+          quantity: cartItems[item._id],
+          name: item.name,
+          description: item.description,
+          price: item.price
+        };
         orderItems.push(itemInfo);
       }
-    
-    })
-    let orderData={
-      deliveryInfo:deliveryInfo,
-      items:orderItems,
-      amount:getTotalCartAmount()+2
-    }
-    let response = await axios.post(url+"/api/order/place", orderData,{headers:{Authorization: `Bearer ${token}`}});
-    if(response.data.success){
-      const {url}=response.data;
-      window.location.replace(url);
-      setMessage("Order placed successfully!");
+    });
 
-    } else {
-      alert("Failed to place order. Please try again.");
+    if (!deliveryInfo || !orderItems || orderItems.length === 0 || !getTotalCartAmount()) {
+      console.log("Invalid order data:", { deliveryInfo, orderItems, amount: getTotalCartAmount() });
+      alert("Invalid order data");
+      return;
     }
+
+    let orderData = { deliveryInfo: deliveryInfo, items: orderItems, amount: getTotalCartAmount() + 2 };
+    console.log("OrderData Sent:", orderData);
+    try {
+
+      console.log(orderData);
+      let response = await axios.post(url + "/api/order/place", orderData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json"
+        }
+      });
+      if (response.data.success) {
+        const {session_url} = response.data;
+
+        window.location.replace(session_url);
+        alert("Order placed successfully!");
+      } else {
+        alert("Failed to place order. Please try again.");
+      }
+  } catch (error) {
+    console.error("Order Error:", error);
+    alert("Something went wrong. Please try again later.");
+  }
   };
  
 
@@ -92,7 +118,6 @@ const PlaceOrder = () => {
               </div>
             </div>
             <button type="submit">Proceed to Payment</button>
-            {message && <p className="order-message">{message}</p>}
           </div>
         </div>
       </form>

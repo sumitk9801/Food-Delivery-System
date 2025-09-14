@@ -89,6 +89,16 @@ const placeOrder = async (req, res) => {
     res.status(500).json({ success: false, message: "Error placing order" });
   }
 };
+const verify_Order = async (req, res) => {
+  const {orderId, success} = req.body;
+  try{
+    if(success){
+      await orderModel.findByIdAndUpdate(orderId, {status: 'preparing'});
+      res.json({success: true, message: 'Paid.'});
+    }
+  } catch(error){
+    // Handle error if needed
+  }
+}
 
-
-export { placeOrder };
+export { placeOrder, verify_Order };

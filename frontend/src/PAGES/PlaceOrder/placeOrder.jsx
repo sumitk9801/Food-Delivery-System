@@ -124,8 +124,6 @@ const PlaceOrder = () => {
     </div>
   )
 }
- const verify_Order = async (req, res) => {
-  
- }
+ 
 
-export default {PlaceOrder, verify_Order};
+export default PlaceOrder;

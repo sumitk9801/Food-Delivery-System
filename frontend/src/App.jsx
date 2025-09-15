@@ -6,6 +6,7 @@ import PlaceOrder from './PAGES/PlaceOrder/placeOrder.jsx'
 import Cart from './PAGES/Cart/Cart.jsx';
 import Footer from './components/Footer/Footer.jsx'
 import LoginPopup from './components/LoginPopup/Loginpop.jsx'
+import Verify from './PAGES/Verify/verify.jsx'
 
 const App = () => {
   const [showLogin, setShowLogin] = useState(false);
@@ -20,6 +21,7 @@ const App = () => {
         <Route path='/' element={<Home/>}/>
         <Route path='/cart' element={<Cart/>}/>
         <Route path='/order' element={<PlaceOrder/>}/>
+        <Route path='/verify' element={<Verify/>}/>
       </Routes>
     </div>
     <Footer/>

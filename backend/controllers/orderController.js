@@ -86,18 +86,24 @@ const placeOrder = async (req, res) => {
 
   } catch (error) {
     console.error("Order Error:", error);
-    res.status(500).json({ success: false, message: "Error placing order" });
+    res.json({ success: false, message: "Error placing order" });
   }
 };
 const verify_Order = async (req, res) => {
   const {orderId, success} = req.body;
   try{
-    if(success){
-      await orderModel.findByIdAndUpdate(orderId, {status: 'preparing'});
+    if(success=="true"){
+      await orderModel.findByIdAndUpdate(orderId, {status: 'true'});
       res.json({success: true, message: 'Paid.'});
+    }
+    else{
+      orderModel.findByIdAndDelete(orderId);
+      res.json({success: false, message: 'Payment failed.'});
     }
   } catch(error){
     // Handle error if needed
+    console.log(error);
+    res.json({success: false, message: 'Server error.'});
   }
 }
 

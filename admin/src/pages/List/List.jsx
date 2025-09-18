@@ -9,7 +9,7 @@ const List = ({url}) => {
   const [list,setList]=useState([]);
 
   const fetchList= async()=>{
-    const response = await axios.get(`${url}/api/food/list`)
+    const response = await axios.get(`l${url}/api/food/ist`)
 
     if(response.data.success){
       setList(response.data.data);

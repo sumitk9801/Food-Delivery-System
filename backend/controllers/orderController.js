@@ -105,6 +105,24 @@ const verify_Order = async (req, res) => {
     console.log(error);
     res.json({success: false, message: 'Server error.'});
   }
+
+}
+const userOrder=async(req,res)=>{
+  try{
+    const userId = req.user.id;
+    
+    if (!userId) {
+      return res.status(401).json({success: false, message: 'User not authenticated'});
+    }
+    
+    const orders = await orderModel.find({userId: userId});
+    
+    res.json({success: true, data: orders});
+  }
+  catch(error){
+    console.error('Error fetching user orders:', error);
+    res.status(500).json({success: false, message: 'Server error.'});
+  }
 }
 
-export { placeOrder, verify_Order };
+export { placeOrder, verify_Order,userOrder };

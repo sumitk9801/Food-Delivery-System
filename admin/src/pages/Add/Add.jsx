@@ -4,16 +4,19 @@ import { assets } from '../../assets/assets.js'
 import { useState } from 'react'
 import axios from "axios"
 import { toast } from 'react-toastify'
+import { useNavigate } from 'react-router-dom'
 
 
 const Add = ({url}) => {
-    
+
+    const navigate = useNavigate();
     const [image,setImage]=useState(null);
     const [data,setData]=useState({
+        _id:Date.now(),
         name:"",
         description:"",
         price:"",
-        category:"Salad" 
+        category:"Salad"
     });
     const onChangeHandler=(event)=>{
         const name=event.target.name;
@@ -24,15 +27,19 @@ const Add = ({url}) => {
         
         event.preventDefault();
         const formData = new FormData();
+
         formData.append("name",data.name);
         formData.append("description",data.description);
         formData.append("price",Number(data.price));
         formData.append("category",data.category);
         formData.append("image",image); // Use the image state variable instead of data.image
         const response = await axios.post(`${url}/api/food/add`,formData);
+
+        
         
         if(response.data.success){
             setData({
+            _id:Date.now(),
             name:"",
             description:"",
             price:"",
@@ -40,6 +47,12 @@ const Add = ({url}) => {
             })
             setImage(false);
             toast.success(response.data.message)
+            // Navigate to list page with the new food id
+            if(response.data.data && response.data.data._id){
+                navigate('/list', { state: { newFoodId: response.data.data._id } });
+            } else {
+                navigate('/list');
+            }
         }
         else{
             toast.error(response.data.message);
@@ -82,10 +95,10 @@ const Add = ({url}) => {
                 </div>
                 <div className="add-price flex-col">
                     <p>Product price</p>
-                    <input onChange={onChangeHandler} value={data.price}type="Number" name="price" placeholder='$20' />
+                    <input onChange={onChangeHandler} value={data.price}type="Number" name="price" placeholder='$2' />
                 </div>
             </div>
-            <button type="submit" className='add-btn'>ADD</button>
+            <button type="submit" className='add-btn' >ADD</button>
         </form>
         
     </div>

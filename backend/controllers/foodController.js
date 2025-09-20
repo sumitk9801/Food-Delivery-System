@@ -22,6 +22,9 @@ const addFood = async (req, res) => {
         });
 
         await food.save();
+        
+        console.log("Food item added:", food);
+
         res.json({
             success: true,
             message: "Food item added successfully",
@@ -53,10 +56,14 @@ const listFood = async (req, res) => {
 
 const removeFood = async (req, res) => {
     try {
-        const food = await Food.findById(req.body.id);
-        fs.unlink(`uploads/${food.image}`, () => { });
+        const foodId = req.params.id;
+        console.log("Request param id:", foodId);
+        const food = await Food.findById(foodId);
+        if (food && food.image) {
+            fs.unlink(`uploads/${food.image}`, () => { });
+        }
 
-        await Food.findByIdAndDelete(req.body.id);
+        await Food.findByIdAndDelete(foodId);
         res.json({ success: true, message: "Food item removed successfully" });
     } catch (err) {
         console.log(err);

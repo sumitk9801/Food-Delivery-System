@@ -12,18 +12,19 @@ const Verify = () => {
     const success = searchParams.get("success");
     const orderId = searchParams.get("orderId");
 
-    const {url, token} = useContext(StoreContext);
+    const {url,token} = useContext(StoreContext);
     const navigate = useNavigate();
 
     const verifyPayment = async()=>{
         try {
-            const response = await axios.post(url + "/api/order/verify", {success, orderId}, {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
+            const response = await axios.post(url + "/api/order/verify", {success, orderId},{
+              headers: {
+                "Authorization": `Bearer ${token}`,
+                "Content-Type": "application/json"
+              }
             });
             if(response.data.success){
-              navigate('/cart');
+              navigate('/myorders');
             }
             else{
               navigate('/');

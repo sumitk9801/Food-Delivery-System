@@ -16,6 +16,16 @@
     width:50px;
 
 }
+.list-table-format.highlighted {
+    background-color: #e8f5e8;
+    border-color: #4caf50;
+    animation: highlight 2s ease-out;
+}
+
+@keyframes highlight {
+    0% { background-color: #e8f5e8; }
+    100% { background-color: transparent; }
+}
 @media(max-width:600px){
     .list-table-format{
         grid-template-columns: 1fr 3fr 1fr;

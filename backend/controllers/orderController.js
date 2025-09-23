@@ -8,8 +8,8 @@ import Stripe from 'stripe';
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 const placeOrder = async (req, res) => {
-  console.log("Backend received:", req.body);
-  console.log("User from token:", req.user);
+  
+  const frontend_url = process.env.CLIENT_URL;
 
   try {
     const userId = req.user.id;
@@ -125,4 +125,15 @@ const userOrder=async(req,res)=>{
   }
 }
 
-export { placeOrder, verify_Order,userOrder };
+//listing orders for admin pannel 
+const listOrders = async (req, res) => {
+  try{
+    let orders =await orderModel.find({});
+    return res.json({success:true,data:orders});
+  }catch(error){
+    console.error('Error fetching all orders:', error);
+    res.json({success: false, message: 'Server error.'});
+  }
+}
+
+export { placeOrder, verify_Order,userOrder, listOrders };

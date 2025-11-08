@@ -1,3 +1,4 @@
-- [x] Update foodRoute.js to use DELETE /remove/:id
-- [x] Update foodController.js to use req.params.id
-- [x] Update List.jsx to use axios.delete with path param
+# TODO List for Resolving BSONError in placeOrder
+
+- [x] Add validation for `item.foodId` in `placeOrder` function using `mongoose.Types.ObjectId.isValid(item.foodId)`
+- [x] If `foodId` is invalid, return a 400 error response with message "Invalid foodId"

@@ -1,5 +1,5 @@
 import React, { createContext, useState, useEffect, useMemo}  from 'react';
-import { food_list } from '../assets/assets';
+// import { food_list } from '../assets/assets';
 import axios from 'axios';
 
 
@@ -12,6 +12,22 @@ const StoreContestProvider = (props)=>{
   const url = "http://localhost:3000";
   const [token,setToken]=useState("")
   const [searchTerm, setSearchTerm] = useState("");
+  const [food_list, setFoodList] = useState([]);
+
+   useEffect(()=>{
+      //fetch food list from backend
+      const fetchFoodList = async () => {
+        try {
+          const response = await axios.get(`${url}/api/food/list`);
+          if (response.data.success) {
+            setFoodList(response.data.data);
+          }
+        } catch (error) {
+          console.error("Error fetching food list:", error);
+        }
+      };
+      fetchFoodList();
+    },[]);
 
   const loadCart = async () => {
     if (!token) return;
@@ -99,12 +115,9 @@ const StoreContestProvider = (props)=>{
         }
       });
       if (response.data.success) {
-        if(!cartItems[ItemId]){
-          return;
-        }
-        else{
-          setCartItems((prev)=>({...prev,[ItemId]:prev[ItemId]-1}));
-        }
+        cart.items = cart.items.filter(item => item.foodId.toString() !== ItemId);
+    await cart.save();
+
       } else {
         alert("Failed to remove item from cart");
       }
@@ -120,7 +133,9 @@ const StoreContestProvider = (props)=>{
       if(cartItems[item]>0){
 
         let itemInfo = food_list.find((product)=>product._id === item);
-        totalAmount += itemInfo.price* cartItems[item];
+        if(itemInfo){
+          totalAmount += itemInfo.price* cartItems[item];
+        }
       }
     }
     return totalAmount;

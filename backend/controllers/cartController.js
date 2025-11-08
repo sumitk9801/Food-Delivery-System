@@ -15,7 +15,7 @@ const addToCart = async (req, res) => {
       cart = new Cart({ userId, items: [] });
     }
 
-    const existingItem = cart.items.find(item => item.foodId.toString() === foodId);
+    const existingItem = cart.items.find(item => item.foodId === foodId);
 
     if (existingItem) {
       existingItem.quantity += quantity;
@@ -44,7 +44,6 @@ const removeFromCart = async (req, res) => {
     }
 
     const existingItem = cart.items.find(item => item.foodId.toString() === foodId);
-
     if (existingItem) {
       if (existingItem.quantity > 1) {
         existingItem.quantity -= 1;
@@ -59,7 +58,7 @@ const removeFromCart = async (req, res) => {
     res.json({ success: true, message: "Item quantity reduced from cart" });
   } catch (error) {
     console.log(error);
-    res.status(500).json({ success: false, message: "Error removing from cart" });
+    res.status(500).json({ success: false, message: error.message });
   }
 };
 

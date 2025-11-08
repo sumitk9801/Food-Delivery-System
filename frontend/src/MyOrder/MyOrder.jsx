@@ -11,10 +11,12 @@ const MyOrder = () => {
     const{url,token}= useContext(StoreContext);
 
     const fetchOrders = async()=>{
-       console.log(url);
         const response =  await axios.post(url+"/api/order/orders",{},{headers:{Authorization: `Bearer ${token}`}});
-        setData(response.data.data);
-        console.log(response.data.data);
+        if(response.data.success){
+          setData(response.data.data);
+        } else {
+          console.error("Failed to fetch orders:", response.data.message);
+        }
     }
 
     useEffect(()=>{
@@ -35,13 +37,13 @@ const MyOrder = () => {
                 <img src={assets.parcel_icon} alt="" />
                 <p>{order.items.map((item,index)=>{
                   if(index===order.items.length-1){
-                    return item.name+"x"+item.quantity
+                    return (item.name || "Unknown food")+"x"+item.quantity
                   }
                   else{
-                    return item.name+"x"+item.quantity+", "
+                    return (item.name || "Unknown food")+"x"+item.quantity+", "
                   }
                 })}</p>
-                <p>${order.amount}.00</p>
+                <p>${order.totalAmount}.00</p>
                 <p>Item: {order.items.length}</p>
                 <p><span>&#x25cf;</span><b>{order.status}</b></p>
                 <button>Track Order</button>

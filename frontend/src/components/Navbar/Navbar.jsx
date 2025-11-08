@@ -1,9 +1,11 @@
 import React, { useContext, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { assets } from "../../assets/assets";
 import "./Navbar.css";
 import { Link } from "react-router-dom";
 import { StoreContext } from "../../context/StoreContext";
 
+<<<<<<< Updated upstream
 const Navbar = ({setShowLogin}) => {
   const [menu, setMenu] = useState("home");
   const [showSearchInput, setShowSearchInput] = useState(false);
@@ -15,6 +17,22 @@ const Navbar = ({setShowLogin}) => {
     setToken("");
     localStorage.removeItem("token");
   };
+=======
+
+const Navbar = ({setShowLogin}) => {
+  const [menu, setMenu] = useState("home"); 
+
+  const {getTotalCartAmount,token ,setToken}= useContext(StoreContext);
+
+  const navigate = useNavigate();
+
+  const logout = ()=>{
+    localStorage.removeItem("token");
+    setToken("");
+    navigate("/");
+
+  }
+>>>>>>> Stashed changes
 
   return (
     <>
@@ -57,6 +75,7 @@ const Navbar = ({setShowLogin}) => {
             <Link to="/cart"><img src={assets.basket_icon} alt="basket" className="" /></Link>
             <div className={getTotalCartAmount()===0?"":"dot"}></div>
           </div>
+<<<<<<< Updated upstream
           {token ? (
             <div className="profile-container">
               <img src={assets.profile_icon} alt="profile" className="profile-icon" />
@@ -68,6 +87,18 @@ const Navbar = ({setShowLogin}) => {
           ) : (
             <button onClick={()=>{setShowLogin(true)}} className="">Sign in</button>
           )}
+=======
+          {!token?<button onClick={()=>{setShowLogin(true)}}   className="">Sign in</button>:<div className="navbar-profile">
+             <img src = {assets.profile_icon} alt=""/>
+             <ul className="nav-profile-dropdown">
+              <li><img src={assets.bag_icon} alt="" /><p>Orders</p></li>
+              <hr/>
+              <li onClick={logout}><img src={assets.logout_icon} alt="" /><p>LogOut</p></li>
+             </ul>
+             </div>
+            }
+          
+>>>>>>> Stashed changes
         </div>
       </div>
     </>

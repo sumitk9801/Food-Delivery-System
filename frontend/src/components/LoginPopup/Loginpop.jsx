@@ -35,9 +35,13 @@ const LoginPop = ({ setShowLogin }) => {
     }
 
     const response = await axios.post(newUrl,data);
+    console.log("Login/Register response:", response.data);
+
     if(response.data.success){
+      console.log("Token from response:", response.data.token);
       setToken(response.data.token);
       localStorage.setItem("token",response.data.token);
+      console.log("Token saved to localStorage:", response.data.token);
       setShowLogin(false);
     }
     else{

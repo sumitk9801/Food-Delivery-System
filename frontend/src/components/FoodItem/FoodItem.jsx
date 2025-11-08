@@ -7,16 +7,8 @@ import { useContext } from 'react';
 
 
 const FoodItem = ({id,name,price,description,image}) => {
-<<<<<<< Updated upstream
-    const {addToCart,removeFromCart , cartItems} = useContext(StoreContext);
-    
-=======
-
-    const {addToCart,removeFromCart , cartItems,url} = useContext(StoreContext);
-
-
-
->>>>>>> Stashed changes
+    const {addToCart,removeFromCart , cartItems, url} = useContext(StoreContext);
+  
   return (
      <div className="food-item">
       <div className="food-item-img-container">

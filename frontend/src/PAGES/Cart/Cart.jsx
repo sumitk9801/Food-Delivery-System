@@ -5,12 +5,9 @@ import { StoreContext } from '../../context/StoreContext';
 
 
 const Cart = () => {
-<<<<<<< Updated upstream
-  const {cartItems , removeFromCart,food_list,getTotalCartAmount} = useContext(StoreContext);
-  console.log(food_list); 
-=======
+
   const {cartItems , removeFromCart,food_list,getTotalCartAmount,url} = useContext(StoreContext);
->>>>>>> Stashed changes
+
 
   const navigate = useNavigate();
 
@@ -70,7 +67,7 @@ const Cart = () => {
                     <b>${getTotalCartAmount()+2}</b>
                   </div>
                 </div>
-                  <button onClick={()=>navigate('/order')}>Proceed to Checkout</button>
+                <button onClick={()=>navigate('/order')}>Proceed to Checkout</button>
               </div>
               <div className="cart-promocode">
                 <div className="">
@@ -81,30 +78,12 @@ const Cart = () => {
                   </div>
                 </div>
               </div>
-<<<<<<< Updated upstream
             </>
           ) : (
-            <p className='cart-empty'>"No item is Added to Cart"</p>
+            <div className="cart-empty">
+              <p>Your cart is empty</p>
+            </div>
           )}
-=======
-              <hr />
-              <div className="cart-total-details">
-                <b>Total</b>
-                <b>${getTotalCartAmount()+2}</b>
-              </div>
-            </div>
-              <button onClick={()=>navigate('/order')}>Proceed to Checkout</button>
-          </div>
-        <div className="cart-promocode">
-          <div className="">
-            <p>if you have promocode, Enter it here</p>
-            <div className="cart-promocode-input">
-              <input type="text" placeholder="promo code" />
-              <button>Submit</button>
-            </div>
-          </div>
-        </div>
->>>>>>> Stashed changes
         </div>
       </div>
     </div>

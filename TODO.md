@@ -1,4 +1,12 @@
-# TODO List for Resolving BSONError in placeOrder
-
-- [x] Add validation for `item.foodId` in `placeOrder` function using `mongoose.Types.ObjectId.isValid(item.foodId)`
-- [x] If `foodId` is invalid, return a 400 error response with message "Invalid foodId"
+- Resolve conflicts in backend/server.js (keep stashed changes, add back orderRouter) ✓
+- Resolve conflicts in backend/controllers/cartController.js (keep stashed changes) ✓
+- Resolve conflicts in backend/middleware/auth.js (keep stashed changes) ✓
+- Resolve conflicts in backend/routes/cartRoute.js (keep stashed changes) ✓
+- Resolve conflicts in frontend/src/PAGES/Cart/Cart.jsx (keep stashed changes) ✓
+- Resolve conflicts in frontend/src/components/FoodDisplay/FoodDisplay.jsx (keep stashed changes) ✓
+- Resolve conflicts in frontend/src/components/FoodItem/FoodItem.jsx (keep stashed changes) ✓
+- Resolve conflicts in frontend/src/components/Navbar/Navbar.css (keep stashed changes) ✓
+- Resolve conflicts in frontend/src/components/Navbar/Navbar.jsx (keep stashed changes) ✓
+- Resolve conflicts in frontend/src/context/StoreContext.jsx (keep stashed changes) ✓
+- Stage all resolved files ✓
+- Commit the merge ✓

@@ -32,22 +32,14 @@ const StoreContestProvider = (props)=>{
   const loadCart = async () => {
     if (!token) return;
     try {
-      const response = await axios.get(`${url}/api/cart/get`, {
+      const response = await axios.post(`${url}/api/cart/get`, {}, {
         headers: {
-          Authorization: `Bearer ${token}`,
+          token: token,
           "Content-Type": "application/json"
         }
       });
       if (response.data.success) {
-        const cartData = {};
-        if (response.data.cart && response.data.cart.items) {
-          response.data.cart.items.forEach(item => {
-            if (item.foodId) {
-              cartData[item.foodId.toString()] = item.quantity;
-            }
-          });
-        }
-        setCartItems(cartData);
+        setCartItems(response.data.cartData);
       }
     } catch (error) {
       console.error("Error loading cart:", error);
@@ -77,9 +69,9 @@ const StoreContestProvider = (props)=>{
       return;
     }
     try {
-      const response = await axios.post(`${url}/api/cart/add`, { foodId: ItemId, quantity: 1 }, {
+      const response = await axios.post(`${url}/api/cart/add`, { itemId: ItemId }, {
         headers: {
-          Authorization: `Bearer ${token}`,
+          token: token,
           "Content-Type": "application/json"
         }
       });
@@ -108,16 +100,14 @@ const StoreContestProvider = (props)=>{
       return;
     }
     try {
-      const response = await axios.post(`${url}/api/cart/remove`, { foodId: ItemId }, {
+      const response = await axios.post(`${url}/api/cart/remove`, { itemId: ItemId }, {
         headers: {
-          Authorization: `Bearer ${token}`,
+          token: token,
           "Content-Type": "application/json"
         }
       });
       if (response.data.success) {
-        cart.items = cart.items.filter(item => item.foodId.toString() !== ItemId);
-    await cart.save();
-
+        setCartItems((prev)=>({...prev,[ItemId]:prev[ItemId]-1}));
       } else {
         alert("Failed to remove item from cart");
       }

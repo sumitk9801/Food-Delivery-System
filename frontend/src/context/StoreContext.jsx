@@ -34,12 +34,16 @@ const StoreContestProvider = (props)=>{
     try {
       const response = await axios.post(`${url}/api/cart/get`, {}, {
         headers: {
-          token: token,
+          Authorization: `Bearer ${token}`,
           "Content-Type": "application/json"
         }
       });
       if (response.data.success) {
-        setCartItems(response.data.cartData);
+        const cartData = {};
+        response.data.cart.items.forEach(item => {
+          cartData[item.foodId] = item.quantity;
+        });
+        setCartItems(cartData);
       }
     } catch (error) {
       console.error("Error loading cart:", error);
@@ -69,9 +73,9 @@ const StoreContestProvider = (props)=>{
       return;
     }
     try {
-      const response = await axios.post(`${url}/api/cart/add`, { itemId: ItemId }, {
+      const response = await axios.post(`${url}/api/cart/add`, { foodId: ItemId }, {
         headers: {
-          token: token,
+          Authorization:`Bearer ${token}`,
           "Content-Type": "application/json"
         }
       });
@@ -100,15 +104,24 @@ const StoreContestProvider = (props)=>{
       return;
     }
     try {
-      const response = await axios.post(`${url}/api/cart/remove`, { itemId: ItemId }, {
+      const response = await axios.post(`${url}/api/cart/remove`, { foodId: ItemId }, {
         headers: {
-          token: token,
+          Authorization:`Bearer ${token}`,
           "Content-Type": "application/json"
         }
       });
       if (response.data.success) {
-        setCartItems((prev)=>({...prev,[ItemId]:prev[ItemId]-1}));
-      } else {
+        if(cartItems[ItemId]===1){
+          const updatedCart = { ...cartItems };
+          delete updatedCart[ItemId];
+          setCartItems(updatedCart);
+          return;
+        } 
+        else{
+          setCartItems((prev)=>({...prev,[ItemId]:prev[ItemId]-1}));
+        }
+      }
+      else {
         alert("Failed to remove item from cart");
       }
     } catch (error) {

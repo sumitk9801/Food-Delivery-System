@@ -7,14 +7,14 @@ import { useContext } from 'react';
 
 
 const FoodItem = ({id,name,price,description,image}) => {
-    const {addToCart,removeFromCart , cartItems, url} = useContext(StoreContext);
+    const {addToCart,removeFromCart , cartItems} = useContext(StoreContext);
   
   return (
      <div className="food-item">
       <div className="food-item-img-container">
         {/*Correct backend image path */}
         <img
-          src={`http://localhost:3000/images/${image}`}
+          src={`${image}`}
           alt={name}
           className="food-item-img"
         />

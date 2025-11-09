@@ -16,17 +16,12 @@ const placeOrder = async (req, res) => {
     const userId = req.user.id;
     const { deliveryInfo, items, amount } = req.body;
 
-    console.log("Delivery Info:", deliveryInfo);
-    console.log("Items:", items);
-    console.log("Amount:", amount);
-
     if (!deliveryInfo || !items || items.length === 0 || !amount) {
       return res.status(400).json({ success: false, message: "Invalid order data" });
     }
 
     // Validate foodId values before conversion
     for (const item of items) {
-      console.log("Validating item:", item);
       if (!item.foodId) {
         return res.status(400).json({ success: false, message: `Missing foodId in item` });
       }
@@ -48,7 +43,6 @@ const placeOrder = async (req, res) => {
 
     try {
       await order.save();
-      console.log("Order saved successfully:", order);
     } catch (saveError) {
       console.error("Error saving order:", saveError);
       return res.status(500).json({ success: false, message: "Failed to save order" });
@@ -85,8 +79,6 @@ const placeOrder = async (req, res) => {
       success_url: `${process.env.CLIENT_URL}/verify?success=true&orderId=${order._id}`,
       cancel_url: `${process.env.CLIENT_URL}/verify?success=false&orderId=${order._id}`,
     });
-
- 
     res.json({ success: true, session_url: session.url, orderId: order._id });
 
   } catch (error) {
@@ -120,20 +112,20 @@ const userOrder=async(req,res)=>{
       return res.status(401).json({success: false, message: 'User not authenticated'});
     }
 
-    let orders = await orderModel.find({userId: userId});
-
+    let orders= await orderModel.find({userId});
+    // console.log('Fetched orders for user fromorderController->userOrder:', orders);
     // Convert string foodIds to ObjectIds for existing orders
-    orders.forEach(order => {
-      order.items.forEach(item => {
-        if (typeof item.foodId === 'string') {
-          try {
-            item.foodId = new mongoose.Types.ObjectId(item.foodId);
-          } catch (convertError) {
-            console.warn('Failed to convert foodId to ObjectId:', item.foodId, convertError.message);
-          }
-        }
-      });
-    });
+    // orders.forEach(order => {
+    //   orders.items.forEach(item => {
+    //     if (typeof item.foodId === 'string') {
+    //       try {
+    //         item.foodId = new mongoose.Types.ObjectId(item.foodId);
+    //       } catch (convertError) {
+    //         console.warn('Failed to convert foodId to ObjectId:', item.foodId, convertError.message);
+    //       }
+    //     }
+    //   });
+    // });
 
     // Try to populate, but don't fail if it doesn't work
     try {
@@ -145,7 +137,6 @@ const userOrder=async(req,res)=>{
     } catch (populateError) {
       console.warn('Populate failed for user orders, returning orders without food details:', populateError.message);
     }
-
     res.json({success: true, data: orders});
   }
   catch(error){
@@ -160,17 +151,17 @@ const listOrders = async (req, res) => {
     let orders =await orderModel.find({});
 
     // Convert string foodIds to ObjectIds for existing orders
-    orders.forEach(order => {
-      order.items.forEach(item => {
-        if (typeof item.foodId === 'string') {
-          try {
-            item.foodId = new mongoose.Types.ObjectId(item.foodId);
-          } catch (convertError) {
-            console.warn('Failed to convert foodId to ObjectId:', item.foodId, convertError.message);
-          }
-        }
-      });
-    });
+    // orders.forEach(order => {
+    //   order.items.forEach(item => {
+    //     if (typeof item.foodId === 'string') {
+    //       try {
+    //         item.foodId = new mongoose.Types.ObjectId(item.foodId);
+    //       } catch (convertError) {
+    //         console.warn('Failed to convert foodId to ObjectId:', item.foodId, convertError.message);
+    //       }
+    //     }
+    //   });
+    // });
 
     // Try to populate, but don't fail if it doesn't work
     try {
@@ -178,7 +169,7 @@ const listOrders = async (req, res) => {
         path: 'items.foodId',
         model: 'Food'
       });
-      console.log('Populate succeeded for admin orders');
+      // console.log('Populate succeeded for admin orders');
     } catch (populateError) {
       console.warn('Populate failed, returning orders without food details:', populateError.message);
     }

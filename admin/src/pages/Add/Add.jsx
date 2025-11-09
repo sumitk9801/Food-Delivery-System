@@ -48,6 +48,7 @@ const Add = ({url}) => {
             setImage(false);
             toast.success(response.data.message)
             // Navigate to list page with the new food id
+            console.log("Response Data:", response.data);
             if(response.data.data && response.data.data._id){
                 navigate('/list', { state: { newFoodId: response.data.data._id } });
             } else {

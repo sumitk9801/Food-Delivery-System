@@ -5,7 +5,9 @@ import { StoreContext } from '../../context/StoreContext';
 
 
 const Cart = () => {
-  const {cartItems , removeFromCart,food_list,getTotalCartAmount} = useContext(StoreContext);
+
+  const {cartItems , removeFromCart,food_list,getTotalCartAmount,url} = useContext(StoreContext);
+
 
   const navigate = useNavigate();
 
@@ -24,13 +26,13 @@ const Cart = () => {
           <br />
           <hr />
           {food_list.map((item,index) => {
+            
             if(cartItems[item._id]>0){
-           
-
+              
               return(
                 <div>
                 <div className="cart-items-title cart-items-item" key={index}>
-                  <img src={item.image} alt="" />
+                  <img src={url+"/images/"+item.image} alt="" />
                   <p>{item.name}</p>
                   <p>${item.price}</p>
                   <p>{cartItems[item._id]}</p>
@@ -65,7 +67,7 @@ const Cart = () => {
                     <b>${getTotalCartAmount()+2}</b>
                   </div>
                 </div>
-                  <button onClick={()=>navigate('/order')}>Proceed to Checkout</button>
+                <button onClick={()=>navigate('/order')}>Proceed to Checkout</button>
               </div>
               <div className="cart-promocode">
                 <div className="">
@@ -78,7 +80,9 @@ const Cart = () => {
               </div>
             </>
           ) : (
-            <p className='cart-empty'>"No item is Added to Cart"</p>
+            <div className="cart-empty">
+              <p>Your cart is empty</p>
+            </div>
           )}
         </div>
       </div>

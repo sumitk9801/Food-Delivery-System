@@ -1,3 +1,12 @@
-- [x] Update foodRoute.js to use DELETE /remove/:id
-- [x] Update foodController.js to use req.params.id
-- [x] Update List.jsx to use axios.delete with path param
+- Resolve conflicts in backend/server.js (keep stashed changes, add back orderRouter) ✓
+- Resolve conflicts in backend/controllers/cartController.js (keep stashed changes) ✓
+- Resolve conflicts in backend/middleware/auth.js (keep stashed changes) ✓
+- Resolve conflicts in backend/routes/cartRoute.js (keep stashed changes) ✓
+- Resolve conflicts in frontend/src/PAGES/Cart/Cart.jsx (keep stashed changes) ✓
+- Resolve conflicts in frontend/src/components/FoodDisplay/FoodDisplay.jsx (keep stashed changes) ✓
+- Resolve conflicts in frontend/src/components/FoodItem/FoodItem.jsx (keep stashed changes) ✓
+- Resolve conflicts in frontend/src/components/Navbar/Navbar.css (keep stashed changes) ✓
+- Resolve conflicts in frontend/src/components/Navbar/Navbar.jsx (keep stashed changes) ✓
+- Resolve conflicts in frontend/src/context/StoreContext.jsx (keep stashed changes) ✓
+- Stage all resolved files ✓
+- Commit the merge ✓

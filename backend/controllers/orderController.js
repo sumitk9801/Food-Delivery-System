@@ -3,13 +3,14 @@ dotenv.config();
 import mongoose from 'mongoose';
 import orderModel from "../models/orderModel.js";
 import Cart from "../models/cartModel.js";
+import Food from "../models/foodmodel.js";
 import Stripe from 'stripe';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 const placeOrder = async (req, res) => {
-  console.log("Backend received:", req.body);
-  console.log("User from token:", req.user);
+  
+  const frontend_url = process.env.CLIENT_URL;
 
   try {
     const userId = req.user.id;
@@ -29,12 +30,16 @@ const placeOrder = async (req, res) => {
       if (!item.foodId) {
         return res.status(400).json({ success: false, message: `Missing foodId in item` });
       }
+      if (!mongoose.Types.ObjectId.isValid(item.foodId)) {
+        return res.status(400).json({ success: false, message: `Invalid foodId: ${item.foodId}` });
+      }
     }
 
     const order = new orderModel({
-      userId: new mongoose.Types.ObjectId(userId),
+      userId:  new mongoose.Types.ObjectId(userId),
       items: items.map(item => ({
-        foodId: item.foodId,
+        foodId: new mongoose.Types.ObjectId(item.foodId),
+        foodName: item.name,
         quantity: item.quantity
       })),
       deliveryInfo,
@@ -110,13 +115,37 @@ const verify_Order = async (req, res) => {
 const userOrder=async(req,res)=>{
   try{
     const userId = req.user.id;
-    
+
     if (!userId) {
       return res.status(401).json({success: false, message: 'User not authenticated'});
     }
-    
-    const orders = await orderModel.find({userId: userId});
-    
+
+    let orders = await orderModel.find({userId: userId});
+
+    // Convert string foodIds to ObjectIds for existing orders
+    orders.forEach(order => {
+      order.items.forEach(item => {
+        if (typeof item.foodId === 'string') {
+          try {
+            item.foodId = new mongoose.Types.ObjectId(item.foodId);
+          } catch (convertError) {
+            console.warn('Failed to convert foodId to ObjectId:', item.foodId, convertError.message);
+          }
+        }
+      });
+    });
+
+    // Try to populate, but don't fail if it doesn't work
+    try {
+      orders = await orderModel.populate(orders, {
+        path: 'items.foodId',
+        model: 'Food'
+      });
+      console.log('Populate succeeded for user orders');
+    } catch (populateError) {
+      console.warn('Populate failed for user orders, returning orders without food details:', populateError.message);
+    }
+
     res.json({success: true, data: orders});
   }
   catch(error){
@@ -125,4 +154,38 @@ const userOrder=async(req,res)=>{
   }
 }
 
-export { placeOrder, verify_Order,userOrder };
+//listing orders for admin pannel
+const listOrders = async (req, res) => {
+  try{
+    let orders =await orderModel.find({});
+
+    // Convert string foodIds to ObjectIds for existing orders
+    orders.forEach(order => {
+      order.items.forEach(item => {
+        if (typeof item.foodId === 'string') {
+          try {
+            item.foodId = new mongoose.Types.ObjectId(item.foodId);
+          } catch (convertError) {
+            console.warn('Failed to convert foodId to ObjectId:', item.foodId, convertError.message);
+          }
+        }
+      });
+    });
+
+    // Try to populate, but don't fail if it doesn't work
+    try {
+      orders = await orderModel.populate(orders, {
+        path: 'items.foodId',
+        model: 'Food'
+      });
+      console.log('Populate succeeded for admin orders');
+    } catch (populateError) {
+      console.warn('Populate failed, returning orders without food details:', populateError.message);
+    }
+    return res.json({success:true,data:orders});
+  }catch(error){
+    console.error('Error fetching all orders:', error);
+    res.json({success: false, message: 'Server error.'});
+  }
+}
+export { placeOrder, verify_Order,userOrder, listOrders };

@@ -8,25 +8,26 @@ import Footer from './components/Footer/Footer.jsx'
 import LoginPopup from './components/LoginPopup/Loginpop.jsx'
 import Verify from './PAGES/Verify/verify.jsx'
 import MyOrder from './MyOrder/MyOrder.jsx'
+import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary.jsx'
 const App = () => {
   const [showLogin, setShowLogin] = useState(false);
   return (
-    <>
-    {
-      showLogin ? <LoginPopup setShowLogin={setShowLogin} />:<></>
-    }
-    <div className='app'>
-      <Navbar setShowLogin={setShowLogin} />
-      <Routes>
-        <Route path='/' element={<Home/>}/>
-        <Route path='/cart' element={<Cart/>}/>
-        <Route path='/order' element={<PlaceOrder/>}/>
-        <Route path='/verify' element={<Verify/>}/>
-        <Route path='/myorders' element={<MyOrder/>}/>
-      </Routes>
-    </div>
-    <Footer/>
-    </>
+    <ErrorBoundary>
+      {
+        showLogin ? <LoginPopup setShowLogin={setShowLogin} />:<></>
+      }
+      <div className='app'>
+        <Navbar setShowLogin={setShowLogin} />
+        <Routes>
+          <Route path='/' element={<Home/>}/>
+          <Route path='/cart' element={<Cart/>}/>
+          <Route path='/order' element={<PlaceOrder/>}/>
+          <Route path='/verify' element={<Verify/>}/>
+          <Route path='/myorders' element={<MyOrder/>}/>
+        </Routes>
+      </div>
+      <Footer/>
+    </ErrorBoundary>
   )
 }
 

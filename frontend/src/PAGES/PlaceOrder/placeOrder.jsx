@@ -1,10 +1,12 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useState, useEffect } from 'react'
 import "./placeOrder.css"
 import axios from 'axios';
+import { useNavigate } from "react-router-dom";
 import { StoreContext } from '../../context/StoreContext'
 
 const PlaceOrder = () => {
 
+  const navigate = useNavigate();
   const { getTotalCartAmount, token, url, food_list, cartItems} = useContext(StoreContext);
   const [deliveryInfo, setDeliveryInfo] = useState({
     firstName: '',
@@ -70,12 +72,21 @@ const PlaceOrder = () => {
       } else {
         alert("Failed to place order. Please try again.");
       }
-  } catch (error) {
-    console.error("Order Error:", error);
-    alert("Something went wrong. Please try again later.");
-  }
+    } catch (error) {
+      console.error("Order Error:", error);
+      alert("Something went wrong. Please try again later.");
+    }
   };
- 
+
+  useEffect(() => {
+    if (!token) {
+      navigate('/cart');
+    }
+    else if(getTotalCartAmount()===0){
+      navigate('/cart');
+    }
+  }, [token]);
+
 
   return (
     <div>

@@ -2,7 +2,7 @@
 
 const cartItemSchema = new mongoose.Schema({
   foodId: {
-    type: Number,
+    type: mongoose.Schema.Types.ObjectId,
     ref: "Food",
     required: true,
   },

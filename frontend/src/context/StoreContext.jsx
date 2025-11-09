@@ -1,5 +1,5 @@
 import React, { createContext, useState, useEffect, useMemo}  from 'react';
-import { food_list } from '../assets/assets';
+// import { food_list } from '../assets/assets';
 import axios from 'axios';
 
 
@@ -12,11 +12,27 @@ const StoreContestProvider = (props)=>{
   const url = "http://localhost:3000";
   const [token,setToken]=useState("")
   const [searchTerm, setSearchTerm] = useState("");
+  const [food_list, setFoodList] = useState([]);
+
+   useEffect(()=>{
+      //fetch food list from backend
+      const fetchFoodList = async () => {
+        try {
+          const response = await axios.get(`${url}/api/food/list`);
+          if (response.data.success) {
+            setFoodList(response.data.data);
+          }
+        } catch (error) {
+          console.error("Error fetching food list:", error);
+        }
+      };
+      fetchFoodList();
+    },[]);
 
   const loadCart = async () => {
     if (!token) return;
     try {
-      const response = await axios.get(`${url}/api/cart/get`, {
+      const response = await axios.post(`${url}/api/cart/get`, {}, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json"
@@ -24,13 +40,9 @@ const StoreContestProvider = (props)=>{
       });
       if (response.data.success) {
         const cartData = {};
-        if (response.data.cart && response.data.cart.items) {
-          response.data.cart.items.forEach(item => {
-            if (item.foodId) {
-              cartData[item.foodId.toString()] = item.quantity;
-            }
-          });
-        }
+        response.data.cart.items.forEach(item => {
+          cartData[item.foodId] = item.quantity;
+        });
         setCartItems(cartData);
       }
     } catch (error) {
@@ -61,9 +73,9 @@ const StoreContestProvider = (props)=>{
       return;
     }
     try {
-      const response = await axios.post(`${url}/api/cart/add`, { foodId: ItemId, quantity: 1 }, {
+      const response = await axios.post(`${url}/api/cart/add`, { foodId: ItemId }, {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization:`Bearer ${token}`,
           "Content-Type": "application/json"
         }
       });
@@ -94,18 +106,22 @@ const StoreContestProvider = (props)=>{
     try {
       const response = await axios.post(`${url}/api/cart/remove`, { foodId: ItemId }, {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization:`Bearer ${token}`,
           "Content-Type": "application/json"
         }
       });
       if (response.data.success) {
-        if(!cartItems[ItemId]){
+        if(cartItems[ItemId]===1){
+          const updatedCart = { ...cartItems };
+          delete updatedCart[ItemId];
+          setCartItems(updatedCart);
           return;
-        }
+        } 
         else{
           setCartItems((prev)=>({...prev,[ItemId]:prev[ItemId]-1}));
         }
-      } else {
+      }
+      else {
         alert("Failed to remove item from cart");
       }
     } catch (error) {
@@ -120,7 +136,9 @@ const StoreContestProvider = (props)=>{
       if(cartItems[item]>0){
 
         let itemInfo = food_list.find((product)=>product._id === item);
-        totalAmount += itemInfo.price* cartItems[item];
+        if(itemInfo){
+          totalAmount += itemInfo.price* cartItems[item];
+        }
       }
     }
     return totalAmount;

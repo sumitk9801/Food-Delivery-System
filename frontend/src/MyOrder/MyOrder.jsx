@@ -12,6 +12,7 @@ const MyOrder = () => {
 
     const fetchOrders = async()=>{
         const response =  await axios.post(url+"/api/order/orders",{},{headers:{Authorization: `Bearer ${token}`}});
+        // console.log("Orders fetched:", response.data.data);
         if(response.data.success){
           setData(response.data.data);
         } else {
@@ -37,10 +38,10 @@ const MyOrder = () => {
                 <img src={assets.parcel_icon} alt="" />
                 <p>{order.items.map((item,index)=>{
                   if(index===order.items.length-1){
-                    return (item.name || "Unknown food")+"x"+item.quantity
+                    return (item.foodName || "Unknown food")+"x"+item.quantity
                   }
                   else{
-                    return (item.name || "Unknown food")+"x"+item.quantity+", "
+                    return (item.foodName || "Unknown food")+"x"+item.quantity+", "
                   }
                 })}</p>
                 <p>${order.totalAmount}.00</p>

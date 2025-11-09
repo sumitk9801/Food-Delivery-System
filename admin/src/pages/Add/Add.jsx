@@ -36,7 +36,6 @@ const Add = ({url}) => {
         const response = await axios.post(`${url}/api/food/add`,formData);
 
         
-        
         if(response.data.success){
             setData({
             _id:Date.now(),

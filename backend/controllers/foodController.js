@@ -13,6 +13,7 @@ const addFood = async (req, res) => {
         }
 
         let image_filename = req.file.filename;
+        console.log("Uploaded file:", req.file);
 
         const food = new Food({
             name: req.body.name,

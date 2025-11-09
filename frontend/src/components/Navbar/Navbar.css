@@ -61,45 +61,6 @@
   top: -8px;
   right: -8px;
 }
-<<<<<<< Updated upstream
-.profile-container {
-  position: relative;
-  display: inline-block;
-}
-.profile-icon {
-  width: 30px;
-  height: 30px;
-  cursor: pointer;
-}
-.dropdown {
-  display: none;
-  position: absolute;
-  top: 100%;
-  right: 0;
-  background-color: white;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-  z-index: 1000;
-  min-width: 120px;
-}
-.profile-container:hover .dropdown {
-  display: block;
-}
-.dropdown-item {
-  display: block;
-  padding: 10px 15px;
-  color: tomato;
-  text-decoration: none;
-  cursor: pointer;
-  font-size: 16px;
-  font-weight: 500;
-}
-.dropdown-item:hover {
-  background-color: #f9f9f9;
-}
-=======
-
 .navbar-profile{
   position:relative;
 
@@ -139,7 +100,6 @@
   color:tomato;
 }
 
->>>>>>> Stashed changes
 @media (max-width: 1050px) {
   .navbar .logo {
     width: 140px;

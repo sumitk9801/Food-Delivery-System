@@ -46,6 +46,17 @@ const PlaceOrder = () => {
         orderItems.push(itemInfo);
       }
     });
+    // cartItems.forEach((item)=>{
+    //   let itemInfo = {
+    //       foodId: item._id,
+    //       quantity: cartItems[item._id],
+    //       name: item.name,
+    //       description: item.description,
+    //       price: item.price
+    //     };
+    //     orderItems.push(itemInfo);
+    // });
+    // console.log("Order Items:", orderItems);
 
     if (!deliveryInfo || !orderItems || orderItems.length === 0 || !getTotalCartAmount()) {
       console.log("Invalid order data:", { deliveryInfo, orderItems, amount: getTotalCartAmount() });

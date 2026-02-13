@@ -12,7 +12,7 @@ dotenv.config();
 
 const App = () => {
 
-  const url = `${process.env.SERVER_URL}`;
+  const url = `${import.meta.env.VITE_SERVER_URL}`;
 
   return (
     <div>

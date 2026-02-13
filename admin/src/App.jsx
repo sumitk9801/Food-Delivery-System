@@ -6,6 +6,8 @@ import Add from './pages/Add/Add.jsx'
 import List from './pages/List/List.jsx'
 import Order from './pages/Orders/Order.jsx'
 import { ToastContainer } from 'react-toastify';
+import dotenv form "dotenv";
+dotenv.config();
 
 
 const App = () => {

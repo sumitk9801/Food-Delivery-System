@@ -12,10 +12,18 @@ import orderRouter from './routes/orderRoute.js';
 const app = express();
 const port = 3000;
 
+const allowedOrigins = [
+  process.env.CLIENT_URL,
+  process.env.ADMIN_URL,
+].filter(Boolean); 
+
 app.use(cors({
-     origin:[`${process.env.CLIENT_URL}`,`${process.env.ADMIN_URL}`],
-    sameSite:"true",
-    credentials:true
+  origin: function (origin, cb) {
+    if (!origin) return cb(null, true); 
+    if (allowedOrigins.includes(origin)) return cb(null, true);
+    return cb(new Error("CORS blocked: " + origin));
+  },
+  credentials: true,
 }));
 app.use(express.json());
 

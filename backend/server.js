@@ -13,7 +13,7 @@ const app = express();
 const port = 3000;
 
 app.use(cors({
-     origin:`${process.env.client_URL}`,
+     origin:[`${process.env.CLIENT_URL}`,`${process.env.ADMIN_URL}`],
     sameSite:"true",
     credentials:true
 }));

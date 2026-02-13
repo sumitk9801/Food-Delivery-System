@@ -12,7 +12,11 @@ import orderRouter from './routes/orderRoute.js';
 const app = express();
 const port = 3000;
 
-app.use(cors());
+app.use(cors({
+     origin:`${process.env.client_URL}`,
+    sameSite:"true",
+    credentials:true
+}));
 app.use(express.json());
 
 

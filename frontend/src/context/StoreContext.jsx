@@ -9,7 +9,7 @@ export const StoreContext = createContext(null);
 const StoreContestProvider = (props)=>{
 
   const [cartItems , setCartItems]=useState({});
-  const url = "http://localhost:3000";
+  const url = import.meta.env.VITE_SERVER_URL || "http://localhost:3000";
   const [token,setToken]=useState("")
   const [searchTerm, setSearchTerm] = useState("");
   const [food_list, setFoodList] = useState([]);

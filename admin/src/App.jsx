@@ -10,7 +10,7 @@ import { ToastContainer } from 'react-toastify';
 
 const App = () => {
 
-  const url = "http://localhost:3000"
+  const url = import.meta.env.VITE_SERVER_URL || "http://localhost:3000"
 
   return (
     <div>

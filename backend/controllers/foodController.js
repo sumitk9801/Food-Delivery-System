@@ -30,7 +30,7 @@ const addFood = async (req, res) => {
         res.json({
             success: true,
             message: "Food item added successfully",
-            food
+            data: food
         });
     } catch (err) {
         console.log("Error adding food item:", err);

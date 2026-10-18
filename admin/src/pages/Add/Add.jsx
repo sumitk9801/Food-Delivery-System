@@ -69,13 +69,38 @@ const Add = ({url}) => {
     return (
     <div className='add'>
         <form className='flex-col' onSubmit={onSubmitHandler}>
-            <div className="add-img-uplaoad flex-col">
+            {/* <div className="add-img-uplaoad flex-col image-container">
                 <p>upload Image</p>
                 <label htmlFor="image">
-                    <img src={image ? URL.createObjectURL(image) : assets.upload_area} alt="" />
+                    <div className='image-container h-[200px] w-[200px] overflow-hidden'>
+                        <img className='object-cover h-full w-full' src={image ? URL.createObjectURL(image) : assets.upload_area} alt="" />
+                    </div>
                 </label>
-                <input onChange={(e)=>setImage(e.target.files[0])} type="file" id="image" hidden required value={image ? undefined : ""} />
-            </div>
+                <input onChange={(e)=>setImage(e.target.files[0])} type="file" id="image" hidden required value={image ? undefined:""}/>
+               
+            </div> */}
+        {/* Removed duplicate 'image-container' class here to avoid external CSS conflicts */}
+        <div className="add-img-uplaoad flex-col">
+            <p>upload Image</p>
+            <label htmlFor="image">
+                {/* Applied strict inline styles for the container */}
+                <div style={{ width: "200px", height: "200px", overflow: "hidden" }}>
+                    <img 
+                        style={{ width: "100%", height: "100%", objectFit: "cover" }} 
+                        src={image ? URL.createObjectURL(image) : assets.upload_area} 
+                        alt="preview" 
+                    />
+                </div>
+            </label>
+            <input 
+                onChange={(e) => setImage(e.target.files[0])} 
+                type="file" 
+                id="image" 
+                hidden 
+                required 
+                value={image ? undefined : ""}
+            />
+        </div>
             <div className="add-product-name flex-col">
                 <p>Product name</p>
                 <input onChange={onChangeHandler} value={data.name} type="text" name="name" placeholder='Type here' required />

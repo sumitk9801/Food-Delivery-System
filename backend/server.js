@@ -8,11 +8,17 @@ import userRouter from './routes/userRoute.js';
 import cartRouter from './routes/cartRoute.js';
 import orderRouter from './routes/orderRoute.js';
 
-
 const app = express();
 const port = process.env.PORT || 3000;
 
-app.use(cors());
+const Client = process.env.CLIENT_URL;
+const Admin = process.env.ADMIN_URL;
+app.use(cors({
+    origin: [Client, Admin],
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+    credentials: true,
+}));
 app.use(express.json());
 
 

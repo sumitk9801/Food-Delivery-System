@@ -1,10 +1,9 @@
 import Food from "../models/foodmodel.js";
-import fs from "fs";
+import { deleteFoodImage, uploadFoodImage } from "../config/cloudinary.js";
 
 const addFood = async (req, res) => {
     try {
         // Check if file was uploaded
-        console.log(req.data);
         if (!req.file) {
             return res.status(400).json({
                 success: false,
@@ -12,14 +11,14 @@ const addFood = async (req, res) => {
             });
         }
 
-        let image_filename = req.file.filename;
-        console.log("Uploaded file:", req.file);
+        const uploadedImage = await uploadFoodImage(req.file.buffer);
 
         const food = new Food({
             name: req.body.name,
             description: req.body.description,
             price: req.body.price,
-            image: image_filename,
+            image: uploadedImage.secure_url,
+            imagePublicId: uploadedImage.public_id,
             category: req.body.category
         });
 
@@ -45,7 +44,11 @@ const addFood = async (req, res) => {
 const listFood = async (req, res) => {
     try {
         const foods = await Food.find({});
-        res.json({ success: true, data: foods });
+        console.log("foods length:", foods.length);
+        if(foods.length === 0){
+            return res.json({ success: true, data: [] });
+        }
+        return res.json({ success: true, data: foods });
     } catch (err) {
         console.log(err);
         res.json({
@@ -61,8 +64,8 @@ const removeFood = async (req, res) => {
         const foodId = req.params.id;
         console.log("Request param id:", foodId);
         const food = await Food.findById(foodId);
-        if (food && food.image) {
-            fs.unlink(`uploads/${food.image}`, () => { });
+        if (food?.imagePublicId) {
+            await deleteFoodImage(food.imagePublicId);
         }
 
         await Food.findByIdAndDelete(foodId);
@@ -80,11 +83,9 @@ const removeFood = async (req, res) => {
 const removeAllFoods = async (req, res) => {
     const foods = await Food.find({});
     await Food.deleteMany({});
-    foods.forEach(food => {
-        if (food.image) {
-            fs.promises.unlink(`uploads/${food.image}`).catch(() => { });
-        }
-    });
+    await Promise.all(foods
+        .filter(food => food.imagePublicId)
+        .map(food => deleteFoodImage(food.imagePublicId)));
     res.json({
         success: true,
         message: "All food items and their images removed successfully"

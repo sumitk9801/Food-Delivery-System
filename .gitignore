@@ -24,4 +24,6 @@ dist-ssr
 *.sw?
 
 .env
+frontend/.env
+backend/.env
 uploads

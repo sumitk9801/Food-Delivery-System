@@ -5,14 +5,14 @@ import multer from 'multer';
 
 const foodRouter = express.Router();
 
-//Image Storage method
-const storage = multer.diskStorage({
-    destination:"uploads",
-    filename:(req,file,cb)=>{
-        return cb(null,`${Date.now()}-${file.originalname}`);
+const upload = multer({
+    storage: multer.memoryStorage(),
+    limits: { fileSize: 10 * 1024 * 1024 },
+    fileFilter: (req, file, cb) => {
+        if (file.mimetype.startsWith("image/")) cb(null, true);
+        else cb(new Error("Only image files are allowed"));
     }
-})
-const upload = multer({storage:storage});
+});
 
 foodRouter.post("/add",upload.single("image"),addFood);
 foodRouter.get("/list",listFood);

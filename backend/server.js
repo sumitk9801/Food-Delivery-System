@@ -8,22 +8,16 @@ import userRouter from './routes/userRoute.js';
 import cartRouter from './routes/cartRoute.js';
 import orderRouter from './routes/orderRoute.js';
 
-
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 
-const allowedOrigins = [
-  process.env.CLIENT_URL,
-  process.env.ADMIN_URL,
-].filter(Boolean); 
-
+const Client = process.env.CLIENT_URL;
+const Admin = process.env.ADMIN_URL;
 app.use(cors({
-  origin: function (origin, cb) {
-    if (!origin) return cb(null, true); 
-    if (allowedOrigins.includes(origin)) return cb(null, true);
-    return cb(new Error("CORS blocked: " + origin));
-  },
-  credentials: true,
+    origin: [Client, Admin],
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+    credentials: true,
 }));
 app.use(express.json());
 

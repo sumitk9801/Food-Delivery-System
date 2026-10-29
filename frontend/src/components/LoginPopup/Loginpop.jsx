@@ -23,6 +23,7 @@ const LoginPop = ({ setShowLogin }) => {
     const value = event.target.value
     setData(data=>({...data,[name]:value}));
   }
+  
 
   const onLogin = async(event)=>{
     event.preventDefault();

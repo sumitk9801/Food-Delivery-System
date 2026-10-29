@@ -10,7 +10,7 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 const placeOrder = async (req, res) => {
   
-  const frontend_url = process.env.CLIENT_URL;
+  const frontend_url = (process.env.CLIENT_URL || "http://localhost:5173").replace(/\/$/, "");
 
   try {
     const userId = req.user.id;
@@ -76,8 +76,8 @@ const placeOrder = async (req, res) => {
         }
       ],
       mode: "payment",
-      success_url: `${process.env.CLIENT_URL}/verify?success=true&orderId=${order._id}`,
-      cancel_url: `${process.env.CLIENT_URL}/verify?success=false&orderId=${order._id}`,
+      success_url: `${frontend_url}/verify?success=true&orderId=${order._id}`,
+      cancel_url: `${frontend_url}/verify?success=false&orderId=${order._id}`,
     });
     res.json({ success: true, session_url: session.url, orderId: order._id });
 

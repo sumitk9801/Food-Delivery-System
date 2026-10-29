@@ -13,12 +13,11 @@ const List = ({url}) => {
 
   const fetchList= async()=>{
 
-    const response = await axios.get(url+"/api/food/list")
+    const response = await axios.get(`${url}/api/food/list`)
 
 
     if(response.data.success){
       setList(response.data.data);
-      console.log(response.data.data);
     }
     else{
       toast.error(response.data.message);
@@ -26,7 +25,7 @@ const List = ({url}) => {
   }
   useEffect(()=>{
     fetchList()
-  },[])
+  },[]);
 
   useEffect(() => {
     if (location.state && location.state.newFoodId) {
@@ -42,7 +41,7 @@ const List = ({url}) => {
     const response = await axios.delete(`${url}/api/food/remove/${foodId}`);
     await fetchList();
     if(response.data.success){
-      toast.success(response.data.message)
+      toast.success(response.data.messagem,{autoClose:2000})
     }
     else{
       toast.error(response.data.message);
@@ -64,7 +63,7 @@ const List = ({url}) => {
         {list.map((item,index)=>{
           return (
             <div key ={index} className={`list-table-format ${item._id === newFoodId ? 'highlighted' : ''}`}>
-              <img src={`${url}/images/`+item.image} alt="" />
+              <img src={item.image} alt={item.name} />
               <p>{item.name}</p>
               <p>{item.category}</p>
               <p>${item.price}</p>

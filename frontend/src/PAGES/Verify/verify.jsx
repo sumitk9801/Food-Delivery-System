@@ -24,14 +24,14 @@ const Verify = () => {
               }
             });
             if(response.data.success){
-              navigate('/myorders');
+              navigate('/myorders', { replace: true });
             }
             else{
-              navigate('/');
+              navigate('/', { replace: true });
             }
         } catch (error) {
             console.error("Verification error:", error);
-            navigate('/');
+            navigate('/', { replace: true });
         }
     }
     useEffect(()=>{

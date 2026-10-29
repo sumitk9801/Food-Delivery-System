@@ -7,11 +7,9 @@ import List from './pages/List/List.jsx'
 import Order from './pages/Orders/Order.jsx'
 import { ToastContainer } from 'react-toastify';
 
-
 const App = () => {
 
   const url = import.meta.env.VITE_SERVER_URL || "http://localhost:3000"
-
   return (
     <div>
       <ToastContainer/>

@@ -79,7 +79,7 @@ const createToken = (id)=>{
 
     }catch(error){
         console.log(error);
-        res.json({success:false, message:"This is Error"});
+        res.json({success:false, message:error.message});
     }
 };
 export {loginUser,registerUser}
